@@ -17,7 +17,7 @@ const BaseNavigation = createBottomTabNavigator(
       screen: HomeScreen,
       navigationOptions: () => ({
         tabBarIcon: ({tintColor}) => (
-          <Feather name="grid" size={18} color={tintColor} />
+          <Feather name="grid" size={22} color={tintColor} />
         ),
       }),
     },
@@ -25,7 +25,7 @@ const BaseNavigation = createBottomTabNavigator(
       screen: MyAnnonces,
       navigationOptions: () => ({
         tabBarIcon: ({tintColor}) => (
-          <Feather name="clipboard" size={18} color={tintColor} />
+          <Feather name="clipboard" size={22} color={tintColor} />
         ),
       }),
     },
@@ -39,7 +39,7 @@ const BaseNavigation = createBottomTabNavigator(
       screen: FavorisScreen,
       navigationOptions: () => ({
         tabBarIcon: ({tintColor}) => (
-          <Feather name="heart" size={18} color={tintColor} />
+          <Feather name="heart" size={22} color={tintColor} />
         ),
       }),
     },
@@ -47,7 +47,7 @@ const BaseNavigation = createBottomTabNavigator(
       screen: ChatScreen,
       navigationOptions: () => ({
         tabBarIcon: ({tintColor}) => (
-          <Feather name="message-square" size={18} color={tintColor} />
+          <Feather name="message-square" size={22} color={tintColor} />
         ),
       }),
     },
@@ -56,8 +56,8 @@ const BaseNavigation = createBottomTabNavigator(
     initialRouteName: Routes.TabHome,
     tabBarOptions: {
       showLabel: false,
-      activeTintColor: '#76EF4D',
-      inactiveTintColor: '#ffffff',
+      activeTintColor: '#FBB710',
+      inactiveTintColor: '#726A6A',
       style: {
         backgroundColor: '#ffffff',
         height: 80,

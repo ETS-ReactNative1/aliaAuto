@@ -14,7 +14,7 @@ const AddButton = () => {
         ChangeScreen('AddEvent');
       }}>
       <View style={styles.button}>
-        <Feather style={styles.icon} name="plus" size={30} color="#ffffff" />
+        <Feather style={styles.icon} name="plus" size={22} color="#ffffff" />
       </View>
     </TouchableOpacity>
   );
@@ -22,13 +22,18 @@ const AddButton = () => {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#76EF4D',
+    backgroundColor: '#FBB710',
     borderRadius: 70,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 90,
-    height: 90,
-    marginBottom: 20,
+    width: 60,
+    height: 60,
+    //marginBottom: 20,
+    shadowOpacity: 0.29,
+    shadowRadius: 10,
+    shadowColor: '#000000',
+    shadowOffset: {height: 3, width: 0},
+    elevation: 12,
   },
   icon: {
     zIndex: 20,
