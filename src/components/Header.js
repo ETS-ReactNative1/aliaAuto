@@ -12,49 +12,55 @@ import Colors from '../constants/Colors';
 
 const {width, height} = Dimensions.get('window');
 
-const Header = ({search}) => {
+const Header = ({search, title, iconLeft, iconRight}) => {
   return (
     <View style={styles.headerContainer}>
       <View style={styles.leftContainer}>
-        <TouchableOpacity>
-          <Feather
-            style={styles.rightIcon}
-            name="bar-chart"
-            size={35}
-            color={Colors.$white}
-          />
-        </TouchableOpacity>
+        {iconLeft && (
+          <TouchableOpacity>
+            <Feather
+              style={styles.rightIcon}
+              name="bar-chart"
+              size={35}
+              color={Colors.$white}
+            />
+          </TouchableOpacity>
+        )}
       </View>
 
-      {/* <View style={styles.textContainer}>
-        <Text>header</Text>
-      </View> */}
+      {search ? (
+        <View style={styles.searchContainer}>
+          <TouchableOpacity style={styles.searchIcon}>
+            <Feather
+              //style={styles.searchIcon}
+              name="search"
+              size={22}
+              color={Colors.$iconGray}
+            />
+          </TouchableOpacity>
 
-      <View style={styles.searchContainer}>
-        <TouchableOpacity style={styles.searchIcon}>
-          <Feather
-            //style={styles.searchIcon}
-            name="search"
-            size={22}
-            color={Colors.$iconGray}
+          <TextInput
+            style={styles.textInput}
+            placeholder="personalisser recherche"
           />
-        </TouchableOpacity>
-
-        <TextInput
-          style={styles.textInput}
-          placeholder="personalisser recherche"
-        />
-      </View>
+        </View>
+      ) : (
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>{title}</Text>
+        </View>
+      )}
 
       <View style={styles.rightContainer}>
-        <TouchableOpacity>
-          <Feather
-            style={styles.rightIcon}
-            name="sliders"
-            size={30}
-            color={Colors.$white}
-          />
-        </TouchableOpacity>
+        {iconRight && (
+          <TouchableOpacity>
+            <Feather
+              style={styles.rightIcon}
+              name="sliders"
+              size={30}
+              color={Colors.$white}
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -72,6 +78,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderBottomRightRadius: 15,
     borderBottomLeftRadius: 15,
+  },
+  title: {
+    textTransform: 'capitalize',
+    fontSize: 18,
+    color: Colors.$white,
+    fontWeight: 'bold',
   },
   rightIcon: {
     transform: [{rotate: '90deg'}],

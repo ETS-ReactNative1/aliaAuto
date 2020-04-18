@@ -28,10 +28,11 @@ class Home extends Component {
   componentDidMount() {
     carAnnounceApi.getAllAnnounce(this);
   }
+
   render() {
     return (
       <View style={styles.container}>
-        <Header />
+        <Header search />
         {!this.state.isLoaded ? (
           <View style={styles.loaderContainer}>
             <ActivityIndicator size="large" color={Colors.$baseOrange} />
@@ -44,11 +45,6 @@ class Home extends Component {
             renderItem={({item}) => <CarAnnonce annonce={item} />}
           />
         )}
-
-        {/* <CarAnnonce />
-        <CarAnnonce />
-        <CarAnnonce />
-        <CarAnnonce /> */}
       </View>
     );
   }

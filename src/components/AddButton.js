@@ -11,7 +11,7 @@ const AddButton = () => {
   return (
     <TouchableOpacity
       onPress={() => {
-        ChangeScreen('AddEvent');
+        ChangeScreen('ADD_TAB');
       }}>
       <View style={styles.button}>
         <Feather style={styles.icon} name="plus" size={22} color="#ffffff" />
