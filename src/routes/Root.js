@@ -3,17 +3,21 @@ import {createAppContainer} from 'react-navigation';
 import {createStackNavigator, TransitionPresets} from 'react-navigation-stack';
 import BaseNavigation from './BaseNavigator';
 import NavigationService from './NavigationService';
+import SignInScreen from '../screens/SignIn';
 
 const AppNavigatorWrapper = (props) => {
   const AppNavigator = createAppContainer(
     createStackNavigator(
       {
+        auth: {
+          screen: SignInScreen,
+        },
         home: {
           screen: BaseNavigation,
         },
       },
       {
-        initialRouteName: 'home',
+        initialRouteName: 'auth',
         headerMode: 'none',
         mode: 'card',
         defaultNavigationOptions: {

@@ -14,7 +14,8 @@ class CarAnnounceApi {
       )
       .then((res) => res.data)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
+        alert('done');
         parent.setState({annonces: res, isLoaded: true});
       })
       .catch((err) => {

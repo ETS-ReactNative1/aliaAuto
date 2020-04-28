@@ -54,6 +54,7 @@ const BaseNavigation = createBottomTabNavigator(
   },
   {
     initialRouteName: Routes.TabHome,
+    initialRouteParams: {transition: 'fade'},
     tabBarOptions: {
       showLabel: false,
       activeTintColor: '#FBB710',

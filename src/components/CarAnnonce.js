@@ -1,9 +1,17 @@
 import React, {Component} from 'react';
-import {Text, View, Dimensions, StyleSheet, Image} from 'react-native';
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  Dimensions,
+  StyleSheet,
+  Image,
+} from 'react-native';
 import Colors from '../constants/Colors';
 import Feather from 'react-native-vector-icons/Feather';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import appConfig from '../config/appConfig.json';
+//import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const {height, width} = Dimensions.get('window');
 
@@ -12,40 +20,47 @@ export default class CarAnnonce extends Component {
     const {annonce} = this.props;
     const imagePath = '/backservice/file/download/temp/';
     return (
-      <View style={styles.globalContainer}>
-        <Image
-          //source={require('../../assets/ford.jpg')}
-          source={{
-            uri: appConfig.globalUri + imagePath + annonce.principaleImage.path,
-          }}
-          style={styles.img}
-          resizeMode="cover"
-        />
-        <View style={{margin: 15}}>
-          <Text style={styles.text}>{annonce.title}</Text>
-          <View style={styles.detailsContainer}>
-            <View style={styles.priceContainer}>
-              <Feather name="tag" size={22} color={Colors.$baseOrange} />
-              <Text style={styles.priceText}>{annonce.price}€</Text>
-            </View>
-            <View style={styles.posContainer}>
-              <Feather name="map-pin" size={22} color={Colors.$iconLightGray} />
-              <Text style={styles.posText}>
-                {annonce.location.region_name} {annonce.location.commune_name} (
-                {annonce.location.zip_code})
-              </Text>
-            </View>
-            <View
-              style={{
-                width: '15%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <AntIcon name="heart" size={22} color={Colors.$iconLightGray} />
+      <TouchableOpacity>
+        <View style={styles.globalContainer}>
+          <Image
+            //source={require('../../assets/ford.jpg')}
+            source={{
+              uri:
+                appConfig.globalUri + imagePath + annonce.principaleImage.path,
+            }}
+            style={styles.img}
+            resizeMode="cover"
+          />
+          <View style={{margin: 15}}>
+            <Text style={styles.text}>{annonce.title}</Text>
+            <View style={styles.detailsContainer}>
+              <View style={styles.priceContainer}>
+                <Feather name="tag" size={22} color={Colors.$baseOrange} />
+                <Text style={styles.priceText}>{annonce.price}€</Text>
+              </View>
+              <View style={styles.posContainer}>
+                <Feather
+                  name="map-pin"
+                  size={22}
+                  color={Colors.$iconLightGray}
+                />
+                <Text style={styles.posText}>
+                  {annonce.location.region_name} {annonce.location.commune_name}{' '}
+                  ({annonce.location.zip_code})
+                </Text>
+              </View>
+              <View
+                style={{
+                  width: '15%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <AntIcon name="heart" size={22} color={Colors.$iconLightGray} />
+              </View>
             </View>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

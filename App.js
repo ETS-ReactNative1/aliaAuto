@@ -7,10 +7,10 @@ axios.defaults.baseURL = 'http://142.93.111.57/';
 
 axios.defaults.timeout = 3000;
 
-axios.interceptors.request.use((request) => {
-  console.log('starting request', request.url);
-  return request;
-});
+// axios.interceptors.request.use((request) => {
+//   console.log('starting request', request.url);
+//   return request;
+// });
 
 export default class App extends Component {
   render() {

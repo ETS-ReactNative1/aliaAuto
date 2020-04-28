@@ -32,7 +32,7 @@ class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Header search />
+        <Header search iconLeft iconRight />
         {!this.state.isLoaded ? (
           <View style={styles.loaderContainer}>
             <ActivityIndicator size="large" color={Colors.$baseOrange} />
