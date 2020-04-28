@@ -12,8 +12,63 @@ import {
 import Colors from '../constants/Colors';
 import FormInput from '../components/FormInput';
 import Button from '../components/Button';
+import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+import Feather from 'react-native-vector-icons/Feather';
+import SignUpNrml from '../components/auth/SignUpNrml';
 
-export default class SignIn extends Component {
+const FirstRoute = () => <SignUpNrml />;
+
+const SecondRoute = () => (
+  <View style={[styles.scene, {backgroundColor: '#673ab7'}]} />
+);
+
+const renderScene = SceneMap({
+  first: FirstRoute,
+  second: SecondRoute,
+});
+
+export default class SignUp extends Component {
+  state = {
+    index: 0,
+    routes: [
+      {key: 'first', title: 'First'},
+      {key: 'second', title: 'Second'},
+    ],
+  };
+
+  handleChange = (index) => {
+    this.setState({index});
+  };
+
+  renderTabBar = (props) => (
+    <TabBar
+      {...props}
+      indicatorStyle={{backgroundColor: Colors.$baseOrange}}
+      style={{backgroundColor: Colors.$white}}
+      renderLabel={this.renderLabel}
+    />
+  );
+
+  renderLabel = ({route, focused, color}) => {
+    return (
+      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <Feather
+          name={route.key === 'first' ? 'user' : 'users'}
+          size={22}
+          color={Colors.$black}
+        />
+        <Text
+          style={{
+            color: Colors.$black,
+            fontSize: 15,
+            textTransform: 'capitalize',
+          }}>
+          {route.title}
+        </Text>
+      </View>
+    );
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -33,40 +88,18 @@ export default class SignIn extends Component {
               </View>
             </View>
             <View style={styles.titleContainer}>
-              <Text style={styles.title}>SignIn</Text>
+              <Text style={styles.title}>Sign Up</Text>
             </View>
             <View style={styles.globalContainer}>
-              <View style={styles.avatarContaier}>
-                <View style={styles.avatarBorder}>
-                  <Image
-                    source={require('../../assets/man.png')}
-                    style={styles.avatar}
-                  />
-                </View>
-              </View>
-              <View style={styles.formContainer}>
-                <FormInput
-                  name="email"
-                  placeholder="testmail@gmail.com"
-                  type={'emailAddress'}
-                />
-                <FormInput
-                  name="mot de passe"
-                  placeholder="*********"
-                  type="password"
-                />
-                <View style={styles.forgetContainer}>
-                  <TouchableOpacity>
-                    <Text style={styles.creeText}>Cree un compte</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity>
-                    <Text style={styles.forgetMdp}>mot de passe oublié ?</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View style={{marginTop: 35}}>
-                <Button text="se connecter" />
-              </View>
+              <TabView
+                navigationState={{
+                  index: this.state.index,
+                  routes: this.state.routes,
+                }}
+                renderTabBar={this.renderTabBar}
+                renderScene={renderScene}
+                onIndexChange={this.handleChange}
+              />
             </View>
           </ImageBackground>
         </ScrollView>
@@ -85,6 +118,9 @@ const styles = StyleSheet.create({
   imgBackground: {
     flex: 1,
     height: '100%',
+  },
+  scene: {
+    flex: 1,
   },
   imgStyle: {
     height: '50%',
@@ -136,6 +172,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOffset: {height: 3, width: 2},
     elevation: 2,
+    overflow: 'hidden',
   },
   avatar: {
     width: 90,
