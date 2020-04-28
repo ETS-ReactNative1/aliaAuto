@@ -15,12 +15,11 @@ import Button from '../components/Button';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import Feather from 'react-native-vector-icons/Feather';
 import SignUpNrml from '../components/auth/SignUpNrml';
+import SignUpPro from '../components/auth/SignUpPro1';
 
 const FirstRoute = () => <SignUpNrml />;
 
-const SecondRoute = () => (
-  <View style={[styles.scene, {backgroundColor: '#673ab7'}]} />
-);
+const SecondRoute = () => <SignUpPro />;
 
 const renderScene = SceneMap({
   first: FirstRoute,
@@ -31,8 +30,8 @@ export default class SignUp extends Component {
   state = {
     index: 0,
     routes: [
-      {key: 'first', title: 'First'},
-      {key: 'second', title: 'Second'},
+      {key: 'first', title: 'particulier'},
+      {key: 'second', title: 'professionel'},
     ],
   };
 
@@ -62,6 +61,7 @@ export default class SignUp extends Component {
             color: Colors.$black,
             fontSize: 15,
             textTransform: 'capitalize',
+            fontWeight: 'bold',
           }}>
           {route.title}
         </Text>

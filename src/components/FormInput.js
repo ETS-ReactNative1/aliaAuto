@@ -9,12 +9,12 @@ import {
 import Colors from '../constants/Colors';
 import Feather from 'react-native-vector-icons/Feather';
 
-const FormInput = ({name, placeholder, type, icon, iconOff}) => {
+const FormInput = ({name, placeholder, type, icon, iconOff, small}) => {
   const [isVisible, setIsVisible] = useState(false);
   const [inputType, setInputType] = useState(type);
 
   return (
-    <View style={styles.globalContainer}>
+    <View style={[styles.globalContainer, small ? {marginBottom: 8} : null]}>
       <Text style={styles.name}>{name}</Text>
       <View style={styles.inputContainer}>
         <TextInput
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   input: {
     //paddingHorizontal: 15,
     color: Colors.$inputColor,
-    paddingVertical: 7,
+    paddingVertical: 5,
     width: '90%',
   },
   name: {
