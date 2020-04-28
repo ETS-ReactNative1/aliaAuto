@@ -19,7 +19,7 @@ export default class SignIn extends Component {
       <View style={styles.container}>
         <ScrollView contentContainerStyle={{flexGrow: 1}} style={{flex: 1}}>
           <ImageBackground
-            source={require('../../assets/comptes.png')}
+            source={require('../../assets/backgroundImg.png')}
             style={styles.imgBackground}
             resizeMode="stretch"
             imageStyle={styles.imgStyle}>
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   logoContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '35%',
+    marginTop: '30%',
   },
   logoText: {
     fontSize: 45,
@@ -118,7 +118,8 @@ const styles = StyleSheet.create({
   titleContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: 40,
+    marginBottom: 10,
   },
   title: {
     fontSize: 30,
