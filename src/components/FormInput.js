@@ -8,8 +8,18 @@ import {
 } from 'react-native';
 import Colors from '../constants/Colors';
 import Feather from 'react-native-vector-icons/Feather';
+import MAterialIcon from 'react-native-vector-icons/MaterialIcons';
 
-const FormInput = ({name, placeholder, type, icon, iconOff, small}) => {
+const FormInput = ({
+  name,
+  placeholder,
+  type,
+  icon,
+  iconOff,
+  small,
+  material,
+  ...rest
+}) => {
   const [isVisible, setIsVisible] = useState(false);
   const [inputType, setInputType] = useState(type);
 
@@ -21,18 +31,30 @@ const FormInput = ({name, placeholder, type, icon, iconOff, small}) => {
           style={styles.input}
           placeholder={placeholder}
           textContentType={inputType}
+          {...rest}
         />
         <TouchableOpacity
           onPress={() => {
-            if (isVisible) setInputType('none');
-            else setInputType('password');
-            setIsVisible(!isVisible);
+            if (icon === 'eye') {
+              if (isVisible) setInputType('none');
+              else setInputType('password');
+              setIsVisible(!isVisible);
+            }
+            console.log('clicked icon');
           }}>
-          <Feather
-            name={isVisible ? iconOff : icon}
-            size={20}
-            color={Colors.$iconGray}
-          />
+          {material ? (
+            <MAterialIcon
+              name={isVisible ? iconOff : icon}
+              size={20}
+              color={Colors.$iconGray}
+            />
+          ) : (
+            <Feather
+              name={isVisible ? iconOff : icon}
+              size={20}
+              color={Colors.$iconGray}
+            />
+          )}
         </TouchableOpacity>
       </View>
     </View>

@@ -15,7 +15,7 @@ import Button from '../components/Button';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import Feather from 'react-native-vector-icons/Feather';
 import SignUpNrml from '../components/auth/SignUpNrml';
-import SignUpPro from '../components/auth/SignUpPro1';
+import SignUpPro from '../components/auth/SignUpPro2';
 
 const FirstRoute = () => <SignUpNrml />;
 
