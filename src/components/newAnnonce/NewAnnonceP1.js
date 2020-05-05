@@ -9,6 +9,7 @@ import {
 import Colors from '../../constants/Colors';
 import MAterialIcon from 'react-native-vector-icons/MaterialIcons';
 import FormInput from '../FormInput';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const {height, width} = Dimensions.get('window');
 
@@ -20,145 +21,149 @@ class NewAnnonceP1 extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View
-          style={{flexDirection: 'row', marginVertical: 10, marginLeft: 10}}>
-          <TouchableOpacity
-            style={{width: '40%'}}
-            onPress={() => this.setState({isNew: false})}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <MAterialIcon
-                name={
-                  !this.state.isNew
-                    ? 'radio-button-checked'
-                    : 'radio-button-unchecked'
-                }
-                size={22}
-                color={
-                  !this.state.isNew ? Colors.$baseOrange : Colors.$iconGray
-                }
+        <ScrollView>
+          <View
+            style={{flexDirection: 'row', marginVertical: 10, marginLeft: 10}}>
+            <TouchableOpacity
+              style={{width: '40%'}}
+              onPress={() => this.setState({isNew: false})}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <MAterialIcon
+                  name={
+                    !this.state.isNew
+                      ? 'radio-button-checked'
+                      : 'radio-button-unchecked'
+                  }
+                  size={22}
+                  color={
+                    !this.state.isNew ? Colors.$baseOrange : Colors.$iconGray
+                  }
+                />
+                <Text style={styles.genderTitle}>Occasion</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{width: '40%'}}
+              onPress={() => this.setState({isNew: true})}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <MAterialIcon
+                  name={
+                    this.state.isNew
+                      ? 'radio-button-checked'
+                      : 'radio-button-unchecked'
+                  }
+                  size={22}
+                  color={
+                    this.state.isNew ? Colors.$baseOrange : Colors.$iconGray
+                  }
+                />
+                <Text style={styles.genderTitle}>Neuve</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <FormInput name="titre" placeholder="test" type={'none'} small />
+          <FormInput
+            name="version / finition"
+            placeholder="test"
+            type={'none'}
+            small
+            material
+            icon="style"
+          />
+          <View style={styles.twoGridContainer}>
+            <View style={{width: '48%'}}>
+              <FormInput
+                name="marque"
+                small
+                placeholder="test"
+                type="none"
+                icon="chevron-down"
               />
-              <Text style={styles.genderTitle}>Occasion</Text>
             </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{width: '40%'}}
-            onPress={() => this.setState({isNew: true})}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <MAterialIcon
-                name={
-                  this.state.isNew
-                    ? 'radio-button-checked'
-                    : 'radio-button-unchecked'
-                }
-                size={22}
-                color={this.state.isNew ? Colors.$baseOrange : Colors.$iconGray}
+            <View style={{width: '48%'}}>
+              <FormInput
+                name="modèle"
+                placeholder="test"
+                type="none"
+                small
+                icon="chevron-down"
               />
-              <Text style={styles.genderTitle}>Neuve</Text>
             </View>
-          </TouchableOpacity>
-        </View>
-        <FormInput name="titre" placeholder="test" type={'none'} small />
-        <FormInput
-          name="version / finition"
-          placeholder="test"
-          type={'none'}
-          small
-          material
-          icon="style"
-        />
-        <View style={styles.twoGridContainer}>
-          <View style={{width: '48%'}}>
-            <FormInput
-              name="marque"
-              small
-              placeholder="test"
-              type="none"
-              icon="chevron-down"
-            />
           </View>
-          <View style={{width: '48%'}}>
-            <FormInput
-              name="modèle"
-              placeholder="test"
-              type="none"
-              small
-              icon="chevron-down"
-            />
+          <View style={styles.twoGridContainer}>
+            <View style={{width: '48%'}}>
+              <FormInput
+                name="année"
+                small
+                placeholder="test"
+                type="none"
+                icon="chevron-down"
+              />
+            </View>
+            <View style={{width: '48%'}}>
+              <FormInput
+                name="carburant"
+                placeholder="test"
+                type="none"
+                small
+                icon="chevron-down"
+              />
+            </View>
           </View>
-        </View>
-        <View style={styles.twoGridContainer}>
-          <View style={{width: '48%'}}>
-            <FormInput
-              name="année"
-              small
-              placeholder="test"
-              type="none"
-              icon="chevron-down"
-            />
+          <View style={styles.twoGridContainer}>
+            <View style={{width: '48%'}}>
+              <FormInput
+                name="prix"
+                small
+                placeholder="test"
+                type="none"
+                icon="dollar-sign"
+              />
+            </View>
+            <View style={{width: '48%'}}>
+              <FormInput
+                name="km"
+                placeholder="test"
+                type="none"
+                small
+                material
+                icon="timeline"
+              />
+            </View>
           </View>
-          <View style={{width: '48%'}}>
-            <FormInput
-              name="carburant"
-              placeholder="test"
-              type="none"
-              small
-              icon="chevron-down"
-            />
+          <View style={styles.twoGridContainer}>
+            <View style={{width: '48%'}}>
+              <FormInput
+                name="boite de vitesse"
+                small
+                placeholder="test"
+                type="none"
+                icon="chevron-down"
+              />
+            </View>
+            <View style={{width: '48%'}}>
+              <FormInput
+                name="type"
+                placeholder="test"
+                type="none"
+                small
+                icon="chevron-down"
+              />
+            </View>
           </View>
-        </View>
-        <View style={styles.twoGridContainer}>
-          <View style={{width: '48%'}}>
-            <FormInput
-              name="prix"
-              small
-              placeholder="test"
-              type="none"
-              icon="dollar-sign"
-            />
+          <FormInput
+            name="détail"
+            placeholder="test"
+            type="none"
+            small
+            textarea
+          />
+          <View style={{alignItems: 'flex-end', marginTop: 8}}>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>suivant</Text>
+            </TouchableOpacity>
           </View>
-          <View style={{width: '48%'}}>
-            <FormInput
-              name="km"
-              placeholder="test"
-              type="none"
-              small
-              material
-              icon="timeline"
-            />
-          </View>
-        </View>
-        <View style={styles.twoGridContainer}>
-          <View style={{width: '48%'}}>
-            <FormInput
-              name="boite de vitesse"
-              small
-              placeholder="test"
-              type="none"
-              icon="chevron-down"
-            />
-          </View>
-          <View style={{width: '48%'}}>
-            <FormInput
-              name="type"
-              placeholder="test"
-              type="none"
-              small
-              icon="chevron-down"
-            />
-          </View>
-        </View>
-        <FormInput
-          name="détail"
-          placeholder="test"
-          type="none"
-          small
-          textarea
-        />
-        <View style={{alignItems: 'flex-end', marginTop: 8}}>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>suivant</Text>
-          </TouchableOpacity>
-        </View>
+        </ScrollView>
       </View>
     );
   }

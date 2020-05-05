@@ -18,6 +18,8 @@ const FormInput = ({
   iconOff,
   small,
   material,
+  isWrong,
+  errorText,
   ...rest
 }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -26,7 +28,11 @@ const FormInput = ({
   return (
     <View style={[styles.globalContainer, small ? {marginBottom: 8} : null]}>
       <Text style={styles.name}>{name}</Text>
-      <View style={styles.inputContainer}>
+      <View
+        style={[
+          styles.inputContainer,
+          isWrong ? {borderColor: Colors.$errorRed} : null,
+        ]}>
         <TextInput
           style={styles.input}
           placeholder={placeholder}
@@ -57,6 +63,7 @@ const FormInput = ({
           )}
         </TouchableOpacity>
       </View>
+      {isWrong ? <Text style={styles.textError}>{errorText}</Text> : null}
     </View>
   );
 };
@@ -86,6 +93,10 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     alignItems: 'center',
     paddingHorizontal: 15,
+  },
+  textError: {
+    color: Colors.$errorRed,
+    marginLeft: 10,
   },
 });
 

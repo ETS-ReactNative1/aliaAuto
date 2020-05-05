@@ -12,8 +12,20 @@ import {
 import Colors from '../constants/Colors';
 import FormInput from '../components/FormInput';
 import Button from '../components/Button';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
+import {authApi} from '../api';
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().email('email invalide').required('email Required'),
+  password: Yup.string().min(2).max(60).required('le mot de passe est requis'),
+});
 
 export default class SignIn extends Component {
+  testfunc = () => {
+    console.log('test');
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -44,29 +56,61 @@ export default class SignIn extends Component {
                   />
                 </View>
               </View>
-              <View style={styles.formContainer}>
-                <FormInput
-                  name="email"
-                  placeholder="testmail@gmail.com"
-                  type={'emailAddress'}
-                />
-                <FormInput
-                  name="mot de passe"
-                  placeholder="*********"
-                  type="password"
-                />
-                <View style={styles.forgetContainer}>
-                  <TouchableOpacity>
-                    <Text style={styles.creeText}>Cree un compte</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity>
-                    <Text style={styles.forgetMdp}>mot de passe oublié ?</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View style={{marginTop: 35}}>
-                <Button text="se connecter" />
-              </View>
+              <Formik
+                initialValues={{email: '', password: ''}}
+                validationSchema={validationSchema}
+                onSubmit={(values, {setSubmitting, resetForm}) => {
+                  authApi.signIn(values);
+                  console.log('submitting');
+                  console.log(values);
+                }}>
+                {({
+                  values,
+                  handleSubmit,
+                  isSubmiting,
+                  handleErrors,
+                  touched,
+                  errors,
+                  handleChange,
+                }) => (
+                  <>
+                    <View style={styles.formContainer}>
+                      <FormInput
+                        value={values.email}
+                        name="email"
+                        placeholder="testmail@gmail.com"
+                        type={'emailAddress'}
+                        isWrong={touched.email && errors.email}
+                        errorText={errors.email}
+                        onChangeText={handleChange('email')}
+                      />
+                      <FormInput
+                        value={values.password}
+                        name="mot de passe"
+                        placeholder="*********"
+                        type="password"
+                        secureTextEntry={true}
+                        onChangeText={handleChange('password')}
+                        isWrong={touched.password && errors.password}
+                        errorText={errors.password}
+                      />
+                      <View style={styles.forgetContainer}>
+                        <TouchableOpacity onPress>
+                          <Text style={styles.creeText}>Cree un compte</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                          <Text style={styles.forgetMdp}>
+                            mot de passe oublié ?
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                    <View style={{marginTop: 35}}>
+                      <Button text="se connecter" onPress={handleSubmit} />
+                    </View>
+                  </>
+                )}
+              </Formik>
             </View>
           </ImageBackground>
         </ScrollView>

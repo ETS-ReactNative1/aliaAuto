@@ -8,4 +8,6 @@ export default {
   $black: '#000000',
   $borderGray: '#26211C',
   $inputColor: '#4B443C',
+  $errorRed: '#bb0000',
+  $transparent: 'transparent',
 };
