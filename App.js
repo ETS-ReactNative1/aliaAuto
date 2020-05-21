@@ -4,6 +4,8 @@ import Root from './src/routes/Root';
 import axios from 'axios';
 import store from './src/store';
 import {Provider, connect} from 'react-redux';
+import {authApi} from './src/api';
+import {saveToken} from './src/store/actions';
 
 axios.defaults.baseURL = 'http://142.93.111.57/';
 
@@ -15,16 +17,40 @@ axios.interceptors.request.use((request) => {
 });
 
 export default class App extends Component {
+  state = {
+    initial: 'signIn',
+  };
+
+  constructor(props) {
+    super(props);
+    this.store = store;
+  }
+
+  saveTokenToStore = (tokens) => {
+    this.store.dispatch(saveToken(tokens));
+  };
+
+  async componentDidMount() {
+    const tokens = await authApi.getTokens();
+    if (tokens.token !== null) {
+      // todo
+      // check if token is dead or not
+      // change to home
+      this.saveTokenToStore(tokens);
+      this.setState({initial: 'signIn'});
+    }
+  }
+
   render() {
     return (
-      <Provider store={store}>
+      <Provider store={this.store}>
         <View style={styles.container}>
           <StatusBar
             translucent
             backgroundColor="transparent"
             barStyle="dark-content"
           />
-          <Root theme="light" />
+          <Root theme="light" initial={this.state.initial} />
         </View>
       </Provider>
     );

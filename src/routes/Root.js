@@ -21,7 +21,7 @@ const AppNavigatorWrapper = (props) => {
         },
       },
       {
-        initialRouteName: 'signIn',
+        initialRouteName: 'home', //props.initial,
         headerMode: 'none',
         mode: 'card',
         defaultNavigationOptions: {

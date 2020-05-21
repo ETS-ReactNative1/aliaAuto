@@ -15,7 +15,7 @@ import Button from '../components/Button';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import Feather from 'react-native-vector-icons/Feather';
 import SignUpNrml from '../components/auth/SignUpNrml';
-import SignUpPro from '../components/auth/SignUpPro2';
+import SignUpPro from '../components/auth/SignUpProWrapper';
 
 const FirstRoute = () => <SignUpNrml />;
 
@@ -166,13 +166,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     backgroundColor: Colors.$white,
     borderRadius: 36,
-    height: '60%',
+    //height: '60%',
     shadowOpacity: 0.8,
     shadowColor: Colors.$black,
     shadowRadius: 8,
     shadowOffset: {height: 3, width: 2},
     elevation: 2,
     overflow: 'hidden',
+    paddingBottom: 20,
+    marginBottom: 20,
   },
   avatar: {
     width: 90,

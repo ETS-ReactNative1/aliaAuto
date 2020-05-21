@@ -53,7 +53,7 @@ const BaseNavigation = createBottomTabNavigator(
     },
   },
   {
-    initialRouteName: Routes.TabHome,
+    initialRouteName: Routes.TabAdd,
     initialRouteParams: {transition: 'fade'},
     tabBarOptions: {
       showLabel: false,

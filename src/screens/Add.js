@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Text, View, Image, StyleSheet} from 'react-native';
 import Header from '../components/Header';
-import NewAnnonce from '../components/newAnnonce/NewAnnonceP1';
+import NewAnnonce from '../components/newAnnonce/NewAnnonceP3';
 
 export default class Add extends Component {
   render() {

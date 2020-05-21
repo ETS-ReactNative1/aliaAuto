@@ -15,18 +15,127 @@ import Button from '../components/Button';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {authApi} from '../api';
+import {connect} from 'react-redux';
+import {saveToken} from '../store/actions';
+import NavigationService from '../routes/NavigationService';
+import Modal from 'react-native-modal';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email('email invalide').required('email Required'),
   password: Yup.string().min(2).max(60).required('le mot de passe est requis'),
 });
 
-export default class SignIn extends Component {
-  testfunc = () => {
-    console.log('test');
+const validationModalSchema = Yup.object().shape({
+  email: Yup.string().email('email invalide').required('email Required'),
+});
+
+class SignIn extends Component {
+  state = {
+    modalVisible: false,
+    modalMessageSent: false,
+  };
+  changeScreen = (screen) => {
+    NavigationService.navigate(screen);
+  };
+
+  saveTokenSInStore = (tokens) => {
+    this.props.saveTokens(tokens);
+  };
+
+  renderModal = () => {
+    return (
+      <Modal
+        isVisible={this.state.modalVisible}
+        hasBackdrop
+        onBackButtonPress={() => {
+          this.setState({modalVisible: false});
+        }}
+        onBackdropPress={() => {
+          this.setState({modalVisible: false});
+        }}>
+        <View style={styles.modalWrapper}>
+          {this.state.modalMessageSent ? (
+            <Text style={styles.titleModal}>Confirmation</Text>
+          ) : (
+            <Text style={styles.titleModal}>
+              Réinitialiser le mot de passe de votre compte
+            </Text>
+          )}
+
+          <Formik
+            initialValues={{email: ''}}
+            validationSchema={validationModalSchema}
+            onSubmit={(values, {setSubmitting, resetForm}) => {
+              if (!this.state.modalMessageSent) {
+                setSubmitting(true);
+                authApi.resetPassword(values.email).then((res) => {
+                  if (res) {
+                    this.setState({modalMessageSent: true});
+                    resetForm();
+                  }
+                });
+                setSubmitting(false);
+              } else {
+                this.setState({modalVisible: false});
+              }
+            }}>
+            {({
+              values,
+              handleSubmit,
+              isSubmiting,
+              handleErrors,
+              touched,
+              errors,
+              handleChange,
+            }) => (
+              <>
+                <View style={{marginBottom: 10, marginTop: 5}}>
+                  {this.state.modalMessageSent ? (
+                    <Text>
+                      votre demande a été bien enregistré, un lien vous a été
+                      envoyé pour réinitialiser votre mot de passe, penser à
+                      vérifier dans vos courrier indisérables (spam)
+                    </Text>
+                  ) : (
+                    <>
+                      <FormInput
+                        value={values.email}
+                        name="email"
+                        placeholder="testmail@gmail.com"
+                        type={'emailAddress'}
+                        isWrong={touched.email && errors.email}
+                        errorText={errors.email}
+                        onChangeText={handleChange('email')}
+                      />
+                      <Text>
+                        si vous n'avez pas recu de mail , veuiller vérifier dans
+                        votre courrier indésirable (spam)
+                      </Text>
+                    </>
+                  )}
+                </View>
+
+                <View style={styles.buttonswrapper}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={handleSubmit}>
+                    <Text style={styles.buttonText}>
+                      {this.state.modalMessageSent ? 'OK' : 'Enregistrer'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+          </Formik>
+        </View>
+      </Modal>
+    );
   };
 
   render() {
+    // if (this.props.isFocused && this.props.token !== null) {
+    //   this.changeScreen('home');
+    // }
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={{flexGrow: 1}} style={{flex: 1}}>
@@ -60,7 +169,18 @@ export default class SignIn extends Component {
                 initialValues={{email: '', password: ''}}
                 validationSchema={validationSchema}
                 onSubmit={(values, {setSubmitting, resetForm}) => {
-                  authApi.signIn(values);
+                  //todo
+                  /**
+                  add activity indicator to button
+                  change setsubmiting and resetform
+                   */
+                  authApi.signIn(values, this.saveTokenSInStore).then((res) => {
+                    if (res) {
+                      console.log(this.props);
+                      //this.props.saveTokens(res);
+                      this.changeScreen('home');
+                    }
+                  });
                   console.log('submitting');
                   console.log(values);
                 }}>
@@ -95,11 +215,18 @@ export default class SignIn extends Component {
                         errorText={errors.password}
                       />
                       <View style={styles.forgetContainer}>
-                        <TouchableOpacity onPress>
+                        <TouchableOpacity
+                          onPress={() => this.changeScreen('signUp')}>
                           <Text style={styles.creeText}>Cree un compte</Text>
                         </TouchableOpacity>
                         <TouchableOpacity>
-                          <Text style={styles.forgetMdp}>
+                          <Text
+                            style={styles.forgetMdp}
+                            onPress={() => {
+                              this.setState({
+                                modalVisible: true,
+                              });
+                            }}>
                             mot de passe oublié ?
                           </Text>
                         </TouchableOpacity>
@@ -114,10 +241,26 @@ export default class SignIn extends Component {
             </View>
           </ImageBackground>
         </ScrollView>
+        {this.renderModal()}
       </View>
     );
   }
 }
+
+const mapDispatshToProps = (dispatch) => {
+  return {
+    saveTokens: (tokens) => dispatch(saveToken(tokens)),
+  };
+};
+
+const mapStateToProps = ({authReducer}) => {
+  //console.log(authReducer);
+  return {
+    token: authReducer.token,
+  };
+};
+
+export default connect(mapStateToProps, mapDispatshToProps)(SignIn);
 
 const {height, width} = Dimensions.get('window');
 const styles = StyleSheet.create({
@@ -216,5 +359,38 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     paddingHorizontal: 5,
+  },
+  modalWrapper: {
+    backgroundColor: Colors.$white,
+    padding: 20,
+    justifyContent: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  titleModal: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: Colors.$black,
+    marginBottom: 10,
+  },
+  button: {
+    backgroundColor: Colors.$baseOrange,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 60,
+    width: '40%',
+  },
+  buttonText: {
+    color: Colors.$white,
+    fontSize: 13,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    textTransform: 'capitalize',
+    fontWeight: 'bold',
+  },
+  buttonswrapper: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 15,
   },
 });

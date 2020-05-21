@@ -9,6 +9,7 @@ import {
 import Colors from '../constants/Colors';
 import Feather from 'react-native-vector-icons/Feather';
 import MAterialIcon from 'react-native-vector-icons/MaterialIcons';
+import MaterialIconC from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const FormInput = ({
   name,
@@ -18,6 +19,7 @@ const FormInput = ({
   iconOff,
   small,
   material,
+  materialC,
   isWrong,
   errorText,
   ...rest
@@ -34,22 +36,29 @@ const FormInput = ({
           isWrong ? {borderColor: Colors.$errorRed} : null,
         ]}>
         <TextInput
+          {...rest}
           style={styles.input}
           placeholder={placeholder}
+          secureTextEntry={type === 'password' && !isVisible}
           textContentType={inputType}
-          {...rest}
         />
         <TouchableOpacity
           onPress={() => {
             if (icon === 'eye') {
-              if (isVisible) setInputType('none');
-              else setInputType('password');
+              //if (isVisible) setInputType('none');
+              //else setInputType('password');
               setIsVisible(!isVisible);
             }
-            console.log('clicked icon');
+            //console.log('clicked icon');
           }}>
           {material ? (
             <MAterialIcon
+              name={isVisible ? iconOff : icon}
+              size={20}
+              color={Colors.$iconGray}
+            />
+          ) : materialC ? (
+            <MaterialIconC
               name={isVisible ? iconOff : icon}
               size={20}
               color={Colors.$iconGray}
