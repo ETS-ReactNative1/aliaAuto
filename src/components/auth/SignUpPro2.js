@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import FormInput from '../FormInput';
 import Button from '../Button';
 import Colors from '../../constants/Colors';
@@ -15,18 +21,18 @@ const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2
 
 const validationSchema = Yup.object().shape({
   nom: Yup.string()
-    .min(3)
-    .max(30)
-    .required('ce champ est obligatoire (entre 3 et 30)'),
+    .min(3, 'le nom doit etre plus que 3')
+    .max(30, 'le nom doit etre moins que 30')
+    .required('ce champ est obligatoire '),
   prenom: Yup.string()
-    .min(3)
-    .max(30)
+    .min(3, 'le prénom doit etre plus que 3')
+    .max(30, 'le prénom doit etre moins que 30')
     .required('ce champ est obligatoire (entre 3 et 30)'),
   adresse: Yup.string()
-    .min(3)
-    .max(100)
-    .required('ce champ est obligatoire (entre 3 et 100)'),
-  tel: Yup.string().matches(phoneRegExp, 'ce champs nest pas juste'),
+    .min(3, 'adresse doit etre plus que 3')
+    .max(100, 'adresse doit etre moins que 100')
+    .required('ce champ est obligatoire '),
+  tel: Yup.string().matches(phoneRegExp, "ce champs n'est pas juste"),
 });
 
 const SignUpPro2 = (props) => {
@@ -42,6 +48,7 @@ const SignUpPro2 = (props) => {
   );
   const [visible, setVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   const data = villes.map((ville) => {
     return (
@@ -123,6 +130,8 @@ const SignUpPro2 = (props) => {
         onSubmit={(values, {setSubmitting, resetForm}) => {
           if (checked !== '') {
             if (selectedVille) {
+              setIsSending(true);
+              setSubmitting(true);
               let page1state = props.state.page1;
               let page2state = {
                 ...values,
@@ -134,9 +143,16 @@ const SignUpPro2 = (props) => {
                   authApi.signUpPro(page1state, page2state).then((res) => {
                     if (res) {
                       setModalVisible(true);
+                      setIsSending(false);
+                      resetForm();
+                      setSubmitting(false);
                     }
                   });
-                } else alert('mail already exist');
+                } else {
+                  alert('mail already exist');
+                  setSubmitting(false);
+                  setIsSending(false);
+                }
               });
             } else {
               alert('choissiez une ville du dropdown');
@@ -268,10 +284,24 @@ const SignUpPro2 = (props) => {
                   props.saveState(state, 2);
                 }}
                 style={[styles.button, {backgroundColor: Colors.$iconGray}]}>
-                <Text style={styles.buttonText}>precedant</Text>
+                <Text style={styles.buttonText}>précédant</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Enregistrer</Text>
+              <TouchableOpacity
+                style={[
+                  styles.button,
+                  isSending ? {backgroundColor: Colors.$iconLightGray} : null,
+                ]}
+                disabled={isSending}
+                onPress={handleSubmit}>
+                {isSending ? (
+                  <ActivityIndicator
+                    style={{paddingVertical: 6, paddingHorizontal: 10}}
+                    size="small"
+                    color={Colors.$white}
+                  />
+                ) : (
+                  <Text style={styles.buttonText}>Enregistrer</Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>
