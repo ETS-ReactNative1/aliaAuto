@@ -8,6 +8,8 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import Colors from '../constants/Colors';
 import FormInput from '../components/FormInput';
@@ -68,29 +70,38 @@ export default class SignUp extends Component {
       </View>
     );
   };
-
   render() {
     return (
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={{flexGrow: 1}} style={{flex: 1}}>
-          <ImageBackground
-            source={require('../../assets/backgroundImg.png')}
-            style={styles.imgBackground}
-            resizeMode="stretch"
-            imageStyle={styles.imgStyle}>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+        enabled
+        keyboardVerticalOffset={2}>
+        <View style={styles.container}>
+          <View style={styles.headerBG}>
             <View style={styles.logoContainer}>
               <View>
-                <Text style={styles.logoText}>Alia</Text>
-                <Text style={styles.logoSub}>auto</Text>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text style={styles.logoText}>Aut</Text>
+                  <View style={styles.logoCercle} />
+                  <Text style={[styles.logoText, {color: Colors.$baseOrange}]}>
+                    alia
+                  </Text>
+                </View>
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
                   <View style={styles.logoShadow} />
                 </View>
               </View>
             </View>
-            <View style={styles.titleContainer}>
-              <Text style={styles.title}>Sign Up</Text>
-            </View>
-            <View style={styles.globalContainer}>
+            {/* <View style={styles.titleContainer}>
+              <Text style={styles.title}>Nouveau compte</Text>
+            </View> */}
+          </View>
+
+          <View style={styles.globalContainer}>
+            <ScrollView
+              contentContainerStyle={{flexGrow: 1}}
+              keyboardShouldPersistTaps="handled">
               <TabView
                 navigationState={{
                   index: this.state.index,
@@ -100,10 +111,10 @@ export default class SignUp extends Component {
                 renderScene={renderScene}
                 onIndexChange={this.handleChange}
               />
-            </View>
-          </ImageBackground>
-        </ScrollView>
-      </View>
+            </ScrollView>
+          </View>
+        </View>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -111,13 +122,25 @@ export default class SignUp extends Component {
 const {height, width} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    //height: '100%',
+    flexGrow: 1,
+    //flex: 1,
+    backgroundColor: Colors.$baseOrange,
+  },
+  headerBG: {
     backgroundColor: Colors.$bgGray,
+    height: '50%',
   },
   imgBackground: {
     flex: 1,
     height: '100%',
+  },
+  logoCercle: {
+    width: 30,
+    height: 30,
+    borderRadius: 50,
+    backgroundColor: Colors.$baseOrange,
+    marginTop: 10,
+    marginHorizontal: 2,
   },
   scene: {
     flex: 1,
@@ -131,14 +154,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: 20,
     height: 5,
-    backgroundColor: '#D7AB05',
+    backgroundColor: '#d4d5d6',
     borderRadius: 100,
     transform: [{scaleX: 7}],
   },
   logoContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '30%',
+    marginTop: '17%',
   },
   logoText: {
     fontSize: 45,
@@ -154,7 +177,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 40,
+    marginTop: 30,
     marginBottom: 10,
   },
   title: {
@@ -166,7 +189,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     backgroundColor: Colors.$white,
     borderRadius: 36,
-    //height: '60%',
+    minHeight: '70%',
+    height: '70%',
     shadowOpacity: 0.8,
     shadowColor: Colors.$black,
     shadowRadius: 8,
@@ -175,6 +199,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     paddingBottom: 20,
     marginBottom: 20,
+    marginTop: '-50%',
   },
   avatar: {
     width: 90,

@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 15,
     color: Colors.$black,
-    textTransform: 'capitalize',
+    //textTransform: 'capitalize',
     marginLeft: 5,
     marginBottom: 3,
   },

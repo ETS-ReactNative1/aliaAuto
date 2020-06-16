@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet, StatusBar} from 'react-native';
+import {Text, View, StyleSheet, StatusBar, Dimensions} from 'react-native';
 import Root from './src/routes/Root';
 import axios from 'axios';
 import store from './src/store';
 import {Provider, connect} from 'react-redux';
 import {authApi} from './src/api';
 import {saveToken} from './src/store/actions';
+import appConfig from './src/config/appConfig.json';
 
-axios.defaults.baseURL = 'http://142.93.111.57/';
+axios.defaults.baseURL = appConfig.globalUri;
 
 axios.defaults.timeout = 3000;
 
@@ -60,6 +61,9 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    //flexGrow: 1,
+    //height: Dimensions.get('window').height + StatusBar.currentHeight,
+    //flex: 1,
     backgroundColor: '#EDEEEF',
   },
 });

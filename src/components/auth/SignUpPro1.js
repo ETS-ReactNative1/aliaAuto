@@ -5,21 +5,60 @@ import Button from '../Button';
 import Colors from '../../constants/Colors';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import {ScrollView} from 'react-native-gesture-handler';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email('email invalide').required('email Required'),
-  password: Yup.string().min(2).max(60).required('le mot de passe est requis'),
+  password: Yup.string()
+    .max(60, 'mot de passe ne doit pas depasser 60')
+    .required('champ obligatoire')
+    .test(
+      'test password',
+      'le mot de passe doit au mois avoir huit caractéres ou un est en majuscule et un chiffre',
+      function (value) {
+        if (value === undefined) return false;
+        //console.log(value);
+        let numbers = 0;
+        let caracters = 0;
+        let maj = 0;
+        value.split('').map((val) => {
+          if (isNaN(val)) {
+            caracters++;
+            if (val == val.toUpperCase()) maj++;
+          } else numbers++;
+        });
+        return numbers > 0 && caracters >= 8 && maj > 0;
+      },
+    ),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password'), 'confirmation must be the same as password'])
-    .required('confirmation of password is required'),
+    .oneOf([Yup.ref('password'), null], 'le mot de passe ne correspond pas')
+    .required('champ obligatoire'),
   siret: Yup.string()
-    .min(2)
-    .max(60)
-    .required('ce champ est obligatoire entre 2 et 60'),
+    .required('ce champ est obligatoire entre 2 et 60')
+    .test('test siret', "le numero siret n'est pas valide", function (value) {
+      if (value === undefined) return false;
+      if (value.length !== 14 || isNaN(value)) return false;
+      console.log(value);
+      let somme = 0;
+      let tmp;
+      value.split('').map((char, index) => {
+        if (index % 2 === 0) {
+          console.log(char * 2);
+
+          tmp = char * 2;
+          if (tmp > 9) tmp -= 9;
+        } else {
+          tmp = char;
+        }
+        somme += parseInt(tmp);
+      });
+      console.log(somme);
+
+      if (somme % 10 === 0) return true;
+      return false;
+    }),
   entreprise: Yup.string()
-    .min(2)
-    .max(60)
+    .min(2, "nom de l'entreprise doit etre plus que 2")
+    .max(60, "nom de l'entreprise doit etre moins que 60")
     .required('ce champ est obligatoire entre 2 et 60'),
 });
 
@@ -50,8 +89,8 @@ const SignUpPro1 = ({state, saveState}) => {
           <View style={styles.formContainer}>
             <FormInput
               value={values.email}
-              name="email"
-              placeholder="testmail@gmail.com"
+              name="Email"
+              placeholder="Email"
               type={'emailAddress'}
               small
               onChangeText={handleChange('email')}
@@ -60,7 +99,7 @@ const SignUpPro1 = ({state, saveState}) => {
             />
             <FormInput
               value={values.password}
-              name="mot de passe"
+              name="Mot de passe"
               placeholder="*********"
               type="password"
               icon="eye"
@@ -73,7 +112,7 @@ const SignUpPro1 = ({state, saveState}) => {
             />
             <FormInput
               value={values.confirmPassword}
-              name="confirmation de mot de passe"
+              name="Confirmation de mot de passe"
               placeholder="*********"
               type="password"
               icon="eye"
@@ -96,7 +135,7 @@ const SignUpPro1 = ({state, saveState}) => {
             />
             <FormInput
               value={values.entreprise}
-              name="nom de l'entreprise"
+              name="Nom de l'entreprise"
               placeholder="entreprise"
               type="none"
               small
@@ -121,7 +160,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   formContainer: {
-    marginTop: 10,
+    marginTop: 30,
     marginHorizontal: 25,
   },
   button: {

@@ -129,7 +129,7 @@ class NewAnnonceP3 extends Component {
               <Text style={styles.buttonText}>precedant</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>suivant</Text>
+              <Text style={styles.buttonText}>enregistrer</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
