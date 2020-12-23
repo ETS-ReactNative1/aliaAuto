@@ -7,6 +7,7 @@ import {
   ImageBackground,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
   ScrollView,
 } from 'react-native';
 import Colors from '../constants/Colors';
@@ -21,18 +22,22 @@ import NavigationService from '../routes/NavigationService';
 import Modal from 'react-native-modal';
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().email('email invalide').required('email Required'),
-  password: Yup.string().min(2).max(60).required('le mot de passe est requis'),
+  email: Yup.string().email('email invalide').required('Mail obligatoire'),
+  password: Yup.string()
+    .max(60, 'mot de passe ne doit pas depacer 60 caracteres')
+    .required('champ obligatoire'),
 });
 
 const validationModalSchema = Yup.object().shape({
-  email: Yup.string().email('email invalide').required('email Required'),
+  email: Yup.string().email('email invalide').required('Mail obligatoire'),
 });
 
 class SignIn extends Component {
   state = {
     modalVisible: false,
     modalMessageSent: false,
+    isSending: false,
+    isSendingModal: false,
   };
   changeScreen = (screen) => {
     NavigationService.navigate(screen);
@@ -68,15 +73,24 @@ class SignIn extends Component {
             onSubmit={(values, {setSubmitting, resetForm}) => {
               if (!this.state.modalMessageSent) {
                 setSubmitting(true);
+                this.setState({isSendingModal: true});
                 authApi.resetPassword(values.email).then((res) => {
                   if (res) {
-                    this.setState({modalMessageSent: true});
+                    this.setState({
+                      modalMessageSent: true,
+                      isSendingModal: false,
+                    });
+                    setSubmitting(false);
                     resetForm();
+                  } else {
+                    alert('erreur dans la reinistialisation du mot de passe');
+                    setSubmitting(false);
                   }
                 });
-                setSubmitting(false);
               } else {
-                this.setState({modalVisible: false});
+                this.setState({modalMessageSent: true, modalVisible: false});
+                setSubmitting(false);
+                resetForm();
               }
             }}>
             {({
@@ -100,8 +114,8 @@ class SignIn extends Component {
                     <>
                       <FormInput
                         value={values.email}
-                        name="email"
-                        placeholder="testmail@gmail.com"
+                        name="Email"
+                        placeholder="Email"
                         type={'emailAddress'}
                         isWrong={touched.email && errors.email}
                         errorText={errors.email}
@@ -117,11 +131,33 @@ class SignIn extends Component {
 
                 <View style={styles.buttonswrapper}>
                   <TouchableOpacity
-                    style={styles.button}
-                    onPress={handleSubmit}>
-                    <Text style={styles.buttonText}>
-                      {this.state.modalMessageSent ? 'OK' : 'Enregistrer'}
-                    </Text>
+                    style={[
+                      styles.button,
+                      this.state.isSendingModal
+                        ? {backgroundColor: Colors.$iconLightGray}
+                        : null,
+                    ]}
+                    onPress={() => {
+                      if (this.state.modalMessageSent) {
+                        this.setState({
+                          modalMessageSent: true,
+                          modalVisible: false,
+                        });
+                      } else {
+                        handleSubmit();
+                      }
+                    }}>
+                    {this.state.isSendingModal ? (
+                      <ActivityIndicator
+                        style={{paddingVertical: 6, paddingHorizontal: 10}}
+                        size="small"
+                        color={Colors.$white}
+                      />
+                    ) : (
+                      <Text style={styles.buttonText}>
+                        {this.state.modalMessageSent ? 'OK' : 'Envoyer'}
+                      </Text>
+                    )}
                   </TouchableOpacity>
                 </View>
               </>
@@ -138,110 +174,131 @@ class SignIn extends Component {
     // }
     return (
       <View style={styles.container}>
-        <ScrollView contentContainerStyle={{flexGrow: 1}} style={{flex: 1}}>
-          <ImageBackground
-            source={require('../../assets/backgroundImg.png')}
-            style={styles.imgBackground}
-            resizeMode="stretch"
-            imageStyle={styles.imgStyle}>
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{flexGrow: 1}}
+          style={{flex: 1}}>
+          <View style={styles.headerBG}>
             <View style={styles.logoContainer}>
               <View>
-                <Text style={styles.logoText}>Alia</Text>
-                <Text style={styles.logoSub}>auto</Text>
+                {/* <Text style={styles.logoText}>Alia</Text>
+                <Text style={styles.logoSub}>auto</Text> */}
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text style={styles.logoText}>Aut</Text>
+                  <View style={styles.logoCercle} />
+                  <Text style={[styles.logoText, {color: Colors.$baseOrange}]}>
+                    alia
+                  </Text>
+                </View>
+
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
                   <View style={styles.logoShadow} />
                 </View>
               </View>
             </View>
-            <View style={styles.titleContainer}>
-              <Text style={styles.title}>SignIn</Text>
-            </View>
-            <View style={styles.globalContainer}>
-              <View style={styles.avatarContaier}>
-                <View style={styles.avatarBorder}>
-                  <Image
-                    source={require('../../assets/man.png')}
-                    style={styles.avatar}
-                  />
-                </View>
+            {/* <View style={styles.titleContainer}>
+              <Text style={styles.title}>Connecter</Text>
+            </View> */}
+          </View>
+
+          <View style={styles.globalContainer}>
+            <View style={styles.avatarContaier}>
+              <View style={styles.avatarBorder}>
+                <Image
+                  source={require('../../assets/man.png')}
+                  style={styles.avatar}
+                />
               </View>
-              <Formik
-                initialValues={{email: '', password: ''}}
-                validationSchema={validationSchema}
-                onSubmit={(values, {setSubmitting, resetForm}) => {
-                  //todo
-                  /**
-                  add activity indicator to button
-                  change setsubmiting and resetform
-                   */
-                  authApi.signIn(values, this.saveTokenSInStore).then((res) => {
-                    if (res) {
-                      console.log(this.props);
-                      //this.props.saveTokens(res);
-                      this.changeScreen('home');
-                    }
-                  });
-                  console.log('submitting');
-                  console.log(values);
-                }}>
-                {({
-                  values,
-                  handleSubmit,
-                  isSubmiting,
-                  handleErrors,
-                  touched,
-                  errors,
-                  handleChange,
-                }) => (
-                  <>
-                    <View style={styles.formContainer}>
-                      <FormInput
-                        value={values.email}
-                        name="email"
-                        placeholder="testmail@gmail.com"
-                        type={'emailAddress'}
-                        isWrong={touched.email && errors.email}
-                        errorText={errors.email}
-                        onChangeText={handleChange('email')}
-                      />
-                      <FormInput
-                        value={values.password}
-                        name="mot de passe"
-                        placeholder="*********"
-                        type="password"
-                        secureTextEntry={true}
-                        onChangeText={handleChange('password')}
-                        isWrong={touched.password && errors.password}
-                        errorText={errors.password}
-                      />
-                      <View style={styles.forgetContainer}>
-                        <TouchableOpacity
-                          onPress={() => this.changeScreen('signUp')}>
-                          <Text style={styles.creeText}>Cree un compte</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                          <Text
-                            style={styles.forgetMdp}
-                            onPress={() => {
-                              this.setState({
-                                modalVisible: true,
-                              });
-                            }}>
-                            mot de passe oublié ?
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                    <View style={{marginTop: 35}}>
-                      <Button text="se connecter" onPress={handleSubmit} />
-                    </View>
-                  </>
-                )}
-              </Formik>
             </View>
-          </ImageBackground>
+            <Formik
+              initialValues={{email: '', password: ''}}
+              validationSchema={validationSchema}
+              onSubmit={(values, {setSubmitting, resetForm}) => {
+                this.setState({isSending: true});
+                setSubmitting(false);
+                authApi.signIn(values, this.saveTokenSInStore).then((res) => {
+                  if (res) {
+                    console.log(this.props);
+                    //this.props.saveTokens(res);
+
+                    this.setState({isSending: false});
+                    setSubmitting(true);
+                    resetForm();
+
+                    this.changeScreen('home');
+                  } else {
+                    alert('mot de passe ou login erreur');
+                    this.setState({isSending: false});
+                    setSubmitting(true);
+                  }
+                });
+                console.log('submitting');
+                console.log(values);
+              }}>
+              {({
+                values,
+                handleSubmit,
+                isSubmiting,
+                handleErrors,
+                touched,
+                errors,
+                handleChange,
+              }) => (
+                <>
+                  <View style={styles.formContainer}>
+                    <FormInput
+                      value={values.email}
+                      name="Email"
+                      placeholder="Email"
+                      type={'emailAddress'}
+                      isWrong={touched.email && errors.email}
+                      errorText={errors.email}
+                      onChangeText={handleChange('email')}
+                    />
+
+                    <FormInput
+                      value={values.password}
+                      name="Mot de passe"
+                      placeholder="*********"
+                      type="password"
+                      secureTextEntry={true}
+                      onChangeText={handleChange('password')}
+                      isWrong={touched.password && errors.password}
+                      errorText={errors.password}
+                    />
+                    <View style={styles.forgetContainer}>
+                      <TouchableOpacity
+                        onPress={() => this.changeScreen('signUp')}>
+                        <Text style={styles.creeText}>Nouveau compte</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity>
+                        <Text
+                          style={styles.forgetMdp}
+                          onPress={() => {
+                            this.setState({
+                              modalVisible: true,
+                            });
+                          }}>
+                          Mot de passe oublié ?
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  <View style={{marginTop: 35, marginBottom: 20}}>
+                    <Button
+                      text="se connecter"
+                      isSending={this.state.isSending}
+                      onPress={handleSubmit}
+                      disabled={this.state.isSending}
+                    />
+                  </View>
+                </>
+              )}
+            </Formik>
+          </View>
+
+          {this.renderModal()}
         </ScrollView>
-        {this.renderModal()}
       </View>
     );
   }
@@ -267,7 +324,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     //height: '100%',
+    backgroundColor: Colors.$baseOrange, //Colors.$bgGray,
+  },
+  logoCercle: {
+    width: 30,
+    height: 30,
+    borderRadius: 50,
+    backgroundColor: Colors.$baseOrange,
+    marginTop: 10,
+    marginHorizontal: 2,
+  },
+  headerBG: {
     backgroundColor: Colors.$bgGray,
+    height: '50%',
   },
   imgBackground: {
     flex: 1,
@@ -282,14 +351,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: 20,
     height: 5,
-    backgroundColor: '#D7AB05',
+    backgroundColor: '#d4d5d6',
     borderRadius: 100,
     transform: [{scaleX: 7}],
   },
   logoContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '30%',
+    marginTop: '17%',
   },
   logoText: {
     fontSize: 45,
@@ -305,7 +374,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 40,
+    marginTop: 30,
     marginBottom: 10,
   },
   title: {
@@ -317,12 +386,17 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     backgroundColor: Colors.$white,
     borderRadius: 36,
-    height: '60%',
+    minHeight: '70%',
+    //height: '70%',
     shadowOpacity: 0.8,
     shadowColor: Colors.$black,
     shadowRadius: 8,
     shadowOffset: {height: 3, width: 2},
     elevation: 2,
+    marginTop: '-50%',
+    paddingTop: 20,
+    //paddingVertical: 20,
+    //justifyContent: 'center',
   },
   avatar: {
     width: 90,
@@ -332,7 +406,8 @@ const styles = StyleSheet.create({
   avatarContaier: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 25,
+    //marginTop: -25,
+    marginTop: 40,
   },
   avatarBorder: {
     backgroundColor: Colors.$bgGray,

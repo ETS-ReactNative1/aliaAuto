@@ -1,12 +1,31 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import Colors from '../constants/Colors';
 
-const Button = ({text, ...rest}) => {
+const Button = ({text, isSending, ...rest}) => {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity {...rest} style={styles.button}>
-        <Text style={styles.buttonText}>{text}</Text>
+    <View style={[styles.container]}>
+      <TouchableOpacity
+        {...rest}
+        style={[
+          styles.button,
+          isSending ? {backgroundColor: Colors.$iconLightGray} : null,
+        ]}>
+        {isSending ? (
+          <ActivityIndicator
+            style={{paddingVertical: 11}}
+            size="small"
+            color={Colors.$white}
+          />
+        ) : (
+          <Text style={styles.buttonText}>{text}</Text>
+        )}
       </TouchableOpacity>
     </View>
   );
