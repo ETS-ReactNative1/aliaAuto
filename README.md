@@ -1,6 +1,6 @@
 # Cars Retail App - Alia Auto -
 
-this repo represent my simple implementation with React native of a car retail app for a freelance job (that was canceled for lack of resources), this project can run on Android only (i didn't use expo because my analyse at the time showed that i need some custom functionality not implemented with expo).
+this repo represent my simple implementation with React native of a car retail app for a freelance job, this project can run on Android only (i didn't use expo because my analyse at the time showed that i need some custom functionality not implemented with expo).
 
 The architecture proposed in this implementation can help new react native developers in understanding how the flow of screens and api events work, its not a perfect architecture, but a good and maintainable one.
 
